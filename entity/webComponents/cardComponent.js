@@ -13,16 +13,19 @@ class CardComponent extends HTMLElement {
     }
     render(){
         render(html`
+
         <style>
         .cardOne  {
             width: 20%;
             height: auto;
             border-radius: 14px 14px;
             background-color: rgb(179, 113, 113);
+            cursor: pointer;
           }
           .cardOne img {
             width: 100%;
             border-radius: 10px;
+            
           }
           .cardOne h1{
             text-align: center;
@@ -33,10 +36,11 @@ class CardComponent extends HTMLElement {
         </style>
         <section class="cards">
             <div class="cardOne">
-                <img src="${this.src}" alt="Imagen de la tarjeta">
-                <h1>${this.categoria}</h1>
+            <div </div>
+                <img src="${this.src}" alt="Imagen de la tarjeta" class="tarjeta" onclick="miFuncion()">
+                <h1>${this.categoria}</h1>   
             </div>
-        </section>`,this.shadowRoot)
+            </section>`,this.shadowRoot)
     }
 }
 customElements.define("cards-one",CardComponent)
