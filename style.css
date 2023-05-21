@@ -6,5 +6,10 @@
 
 .grid-item {
   background-color: #ccc;
-  padding: 20px;
+  padding: 10px;
+}
+
+.grid-itemFinally{
+  grid-column-start: 3;
+
 }

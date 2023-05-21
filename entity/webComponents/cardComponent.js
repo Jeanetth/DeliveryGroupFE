@@ -16,7 +16,7 @@ class CardComponent extends HTMLElement {
 
         <style>
         .cardOne  {
-            width: 20%;
+            width: 100%;
             height: auto;
             border-radius: 14px 14px;
             background-color: rgb(246,246,68);
