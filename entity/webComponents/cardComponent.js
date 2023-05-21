@@ -6,7 +6,7 @@ class CardComponent extends HTMLElement {
         super();
         this.attachShadow({mode:"open"});
         this.categoria = "comida"
-        this.src = "https://th.bing.com/th/id/R.e1001e86903d5fccba2a7e83a0547bd4?rik=R9kX35vI9jZpVA&riu=http%3a%2f%2fdefinicionde.hugex.net%2fwp-content%2fuploads%2f2015%2f07%2fe1001e86903d5fccba2a7e83a0547bd4.jpg&ehk=OweRpsrwB8UdJuzOCSe6VsS7uhLIyCUHifhCb7dhiSc%3d&risl=&pid=ImgRaw&r=0"
+        this.src = "https://1.bp.blogspot.com/-aES0E44Jtsc/YFjDS-IU0pI/AAAAAAAACjg/u5tmvEtOD-g1xPqf9gAlaBWrywtqEsylwCLcBGAsYHQ/s1920/25790.jpg"
     }
     connectedCallback(){
         this.render();
@@ -19,7 +19,7 @@ class CardComponent extends HTMLElement {
             width: 20%;
             height: auto;
             border-radius: 14px 14px;
-            background-color: rgb(179, 113, 113);
+            background-color: rgb(246,246,68);
             cursor: pointer;
           }
           .cardOne img {
