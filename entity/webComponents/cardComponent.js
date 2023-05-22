@@ -16,7 +16,7 @@ class CardComponent extends HTMLElement {
 
   async loadData() {
     try {
-      const response = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/tipocomercio/all");
+      const response = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/ComercioTipoComercio/all");
       if (response.ok) {
         const data = await response.json();
         console.log(data); // Verificar los datos devueltos en la consola
@@ -30,19 +30,40 @@ class CardComponent extends HTMLElement {
     this.render(); // Renderizar la vista después de cargar los datos
   }
 
+  // Mostrar categorias en orden alfabetico
   getCategoriasOrdenadas() {
     const categorias = this.getCategorias();
     return categorias.sort();
   }
 
+  //obteniendo las categorias con un foreach e ingresando al json dentro de otro json
   getCategorias() {
     const categorias = new Set();
     if (this.data) {
       this.data.forEach(item => {
-        categorias.add(item.nombre);
+        categorias.add(item.tipoComercio.nombre);
       });
     }
     return Array.from(categorias);
+  }
+
+
+//muestra las 6 categorias mas populares(las que mas comercios tiene)
+//
+  getCategoriasPopulares() {
+    const categoriasCount = new Map();
+    if (this.data) {
+      this.data.forEach(item => {
+        const comercioNombre = item.tipoComercio.nombre;
+        if (categoriasCount.has(comercioNombre)) {
+          categoriasCount.set(comercioNombre, categoriasCount.get(comercioNombre) + 1);
+        } else {
+          categoriasCount.set(comercioNombre, 1);
+        }
+      });
+    }
+    const categoriasSorted = Array.from(categoriasCount.entries()).sort((a, b) => b[1] - a[1]);
+    return categoriasSorted.slice(0, 6).map(entry => entry[0]);
   }
 
   render() {
@@ -87,25 +108,24 @@ class CardComponent extends HTMLElement {
           }
         </style>
         <div class="grid-container">
-          ${this.data ? html`
-            ${this.data.slice(0, 6).map((item, index) => html`
-              <div class="grid-item${index === 5 ? ' grid-itemFinally' : ''}">
-                <div class="cardOne">
-                  <div></div>
-                  <img src="${this.src}" alt="Imagen de la tarjeta" class="tarjeta" onclick="miFuncion()" />
-                  <h1>${this.categoria}</h1>
-                  <ul>
-                    <li>
-                      <strong>ID:</strong> ${item.idTipoComercio}
-                      <br>
-                      <strong>Nombre:</strong> ${item.nombre}
-                    </li>
+        ${this.data ? html`
+          ${this.getCategoriasPopulares().map((categoria, index) => html`
+            <div class="grid-item${index === 5 ? ' grid-itemFinally' : ''}">
+              <div class="cardOne">
+                <div></div>
+                <img src="${this.src}" alt="Imagen de la tarjeta" class="tarjeta" onclick="miFuncion()" />
+                <h1>${this.categoria}</h1>
+                <ul>
+                  <li>
+                    <strong>Categoria:</strong> ${categoria}
                     <br>
-                  </ul>
-                </div>
+                  </li>
+                  <br>
+                </ul>
               </div>
-            `)}
-          ` : html``}
+            </div>
+          `)}
+        ` : html``}
           ${this.data && this.data.length >= 6 ? html`
             <div class="grid-item grid-itemFinally">
               <div class="cardOne" onclick="mostrarCategorias()">
