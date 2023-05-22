@@ -16,18 +16,33 @@ class CardComponent extends HTMLElement {
 
   async loadData() {
     try {
-      const response = await fetch("http://localhost:8080/Delivery/comerciohtml");
+      const response = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/tipocomercio/all");
       if (response.ok) {
         const data = await response.json();
         console.log(data); // Verificar los datos devueltos en la consola
         this.data = data;
-        this.render();
       } else {
         throw new Error("Error al obtener los datos del servicio REST");
       }
     } catch (error) {
       console.error("Error al cargar los datos:", error);
     }
+    this.render(); // Renderizar la vista después de cargar los datos
+  }
+
+  getCategoriasOrdenadas() {
+    const categorias = this.getCategorias();
+    return categorias.sort();
+  }
+
+  getCategorias() {
+    const categorias = new Set();
+    if (this.data) {
+      this.data.forEach(item => {
+        categorias.add(item.nombre);
+      });
+    }
+    return Array.from(categorias);
   }
 
   render() {
@@ -81,13 +96,9 @@ class CardComponent extends HTMLElement {
                   <h1>${this.categoria}</h1>
                   <ul>
                     <li>
-                      <strong>ID:</strong> ${item.idComercio}
-                      <br>
-                      <strong>Activo:</strong> ${item.activo}
+                      <strong>ID:</strong> ${item.idTipoComercio}
                       <br>
                       <strong>Nombre:</strong> ${item.nombre}
-                      <br>
-                      <strong>Descripción:</strong> ${item.descripcion}
                     </li>
                     <br>
                   </ul>
@@ -97,11 +108,10 @@ class CardComponent extends HTMLElement {
           ` : html``}
           ${this.data && this.data.length >= 6 ? html`
             <div class="grid-item grid-itemFinally">
-              <div class="cardOne">
+              <div class="cardOne" onclick="mostrarCategorias()">
                 <div></div>
-                <img src="${this.src}" alt="Imagen de la tarjeta" class="tarjeta" onclick="miFuncion()" />
-                <h1>${this.categoria}</h1>
-                
+                <img src="${this.src}" alt="Imagen de la tarjeta" class="tarjeta" />
+                <h1>Categorías</h1>
               </div>
             </div>
           ` : html``}
@@ -112,5 +122,25 @@ class CardComponent extends HTMLElement {
   }
 }
 
-customElements.define("cards-one", CardComponent);
+window.mostrarCategorias = function() {
+  const cardComponent = document.querySelector("cards-one");
+  if (cardComponent) {
+    const categorias = cardComponent.getCategoriasOrdenadas();
 
+    const table = document.createElement("table");
+    table.classList.add("categorias-table");
+
+    categorias.forEach(categoria => {
+      const row = document.createElement("tr");
+      const cell = document.createElement("td");
+      cell.textContent = categoria;
+      row.appendChild(cell);
+      table.appendChild(row);
+    });
+
+    const container = document.getElementById("categorias-container");
+    container.innerHTML = "";
+    container.appendChild(table);
+  }
+};
+customElements.define("cards-one", CardComponent);
