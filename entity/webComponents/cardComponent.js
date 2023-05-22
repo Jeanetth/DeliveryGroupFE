@@ -30,6 +30,20 @@ class CardComponent extends HTMLElement {
     this.render(); // Renderizar la vista después de cargar los datos
   }
 
+  getCategoriasOrdenadas() {
+    const categorias = this.getCategorias();
+    return categorias.sort();
+  }
+
+  getCategorias() {
+    const categorias = new Set();
+    if (this.data) {
+      this.data.forEach(item => {
+        categorias.add(item.nombre);
+      });
+    }
+    return Array.from(categorias);
+  }
 
   render() {
     render(
@@ -92,7 +106,15 @@ class CardComponent extends HTMLElement {
               </div>
             `)}
           ` : html``}
-       
+          ${this.data && this.data.length >= 6 ? html`
+            <div class="grid-item grid-itemFinally">
+              <div class="cardOne" onclick="mostrarCategorias()">
+                <div></div>
+                <img src="${this.src}" alt="Imagen de la tarjeta" class="tarjeta" />
+                <h1>Categorías</h1>
+              </div>
+            </div>
+          ` : html``}
         </div>
       `,
       this.shadowRoot
@@ -100,4 +122,25 @@ class CardComponent extends HTMLElement {
   }
 }
 
+window.mostrarCategorias = function() {
+  const cardComponent = document.querySelector("cards-one");
+  if (cardComponent) {
+    const categorias = cardComponent.getCategoriasOrdenadas();
+
+    const table = document.createElement("table");
+    table.classList.add("categorias-table");
+
+    categorias.forEach(categoria => {
+      const row = document.createElement("tr");
+      const cell = document.createElement("td");
+      cell.textContent = categoria;
+      row.appendChild(cell);
+      table.appendChild(row);
+    });
+
+    const container = document.getElementById("categorias-container");
+    container.innerHTML = "";
+    container.appendChild(table);
+  }
+};
 customElements.define("cards-one", CardComponent);
