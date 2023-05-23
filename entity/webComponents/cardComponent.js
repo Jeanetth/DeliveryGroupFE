@@ -7,6 +7,7 @@ class CardComponent extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.src = "https://i.pinimg.com/564x/b9/2b/52/b92b52dd2bb281eaa010138f1dd805dc.jpg";
     // Resto del código del constructor...
+    this.comerciosFiltrados = []; 
   }
 
   //Manda a llamar el componente cardFetchComponent.js y 
@@ -52,6 +53,8 @@ class CardComponent extends HTMLElement {
     return categoriasSorted.slice(0, 6).map(entry => entry[0]);
   }
 
+
+  
   render() {
     render(
       html`
@@ -158,13 +161,55 @@ class CardComponent extends HTMLElement {
             `;
           })}
         ` : html``}
-        
-        
+      
         </div>
+
+        <div class="grid-container">
+  ${this.comerciosFiltrados ? html`
+    ${this.comerciosFiltrados.map(comercio => {
+      const imageUrl = comercio.descripcion || this.src;
+      return html`
+        <div class="grid-item">
+          <div class="cardOne">
+            <div></div>
+            <img src="${imageUrl}" alt="Imagen de la tarjeta" class="tarjeta" />
+            <h1>${comercio.nombre}</h1>
+            <ul>
+              <!-- Agrega aquí los detalles adicionales del comercio si deseas -->
+            </ul>
+          </div>
+        </div>
+      `;
+    })}
+  ` : html``}
+</div>
+
+
+        
+      
       `,
       this.shadowRoot
     );
   }
+}
+
+
+window.miFuncion = function (categoria) {
+  const cardComponent = document.querySelector("cards-one");
+  const comerciosFiltrados = cardComponent.data.filter(comercio => comercio.tipoComercio.nombre === categoria);
+  cardComponent.comerciosFiltrados = comerciosFiltrados; // Asignar los comercios filtrados a la propiedad comerciosFiltrados
+  console.log(comerciosFiltrados);
+  setTimeout(() => {
+    cardComponent.render(); // Volver a renderizar el componente
+  }, 0);
+  
+  // Aquí puedes realizar cualquier otra acción que desees con los comercios filtrados
+  // Por ejemplo, puedes llamar a otra función o realizar alguna operación adicional
+  
+  // Ejemplo: Imprimir los nombres de los comercios filtrados
+  comerciosFiltrados.forEach(comercio => {
+    console.log(comercio.nombre);
+  });
 }
 
 

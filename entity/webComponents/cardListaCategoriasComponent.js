@@ -56,6 +56,7 @@ class cardListaCategoriasComponent extends HTMLElement {
     return categorias;
   }
 
+
   render() {
     render(
       html`
