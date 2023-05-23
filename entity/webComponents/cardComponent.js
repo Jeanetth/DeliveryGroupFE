@@ -1,40 +1,40 @@
-import { html, render } from "../../LIB/lit-html.js";
 
+import './cardFetchComponent.js'; 
+import { html, render } from "../../LIB/lit-html.js";
 class CardComponent extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this.categoria = "comida";
-    this.src ="https://i.pinimg.com/564x/b9/2b/52/b92b52dd2bb281eaa010138f1dd805dc.jpg";
-    this.data = null; // Variable para almacenar los datos recibidos del servicio REST
+    this.src = "https://i.pinimg.com/564x/b9/2b/52/b92b52dd2bb281eaa010138f1dd805dc.jpg";
+    // Resto del código del constructor...
   }
 
+  //Manda a llamar el componente cardFetchComponent.js y obtener las variables donde estan las conexiones
   connectedCallback() {
-    this.loadData(); // Cargar los datos del servicio REST al iniciar el componente
-  }
-
- 
-
-  async loadData() {
-    try {
-      const response1 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/comercio_tipocomercio/all");
-      const response2 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/tipocomercio/all");
-      if (response1.ok && response2.ok) {
-        const data1 = await response1.json();
-        const data2 = await response2.json();
-        console.log(data1); // Verificar los datos devueltos en la consola
-        console.log(data2); // Verificar los datos devueltos en la consola
-        this.data = data1;
-        this.data2 = data2;
-      } else {
-        throw new Error("Error al obtener los datos de uno o ambos servicios REST");
+    // Esperar a que se cargue completamente el contenido de la página
+    document.addEventListener("DOMContentLoaded", () => {
+      // Obtener una referencia al componente CardFetch
+      const cardFetchComponent = document.querySelector("card-fetch");
+  
+      if (cardFetchComponent) {
+        // Escuchar el evento personalizado 'data-updated' del componente CardFetch
+        cardFetchComponent.addEventListener('data-updated', (event) => {
+          // Obtener los datos del evento (variables de conexion)
+          const data1 = event.detail.data1;
+          const data2 = event.detail.data2;
+  
+          // Asignar los datos a las propiedades del componente CardComponent
+          this.data = data1;
+          this.data2 = data2;
+  
+          // Renderizar el componente
+          this.render();
+        });
       }
-    } catch (error) {
-      console.error("Error al cargar los datos:", error);
-    }
-    this.render(); // Renderizar la vista después de cargar los datos
+    });
   }
 
+  
   // Mostrar categorias en orden alfabetico
   getCategoriasOrdenadas() {
     const categorias = this.getCategorias();
