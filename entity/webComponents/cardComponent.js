@@ -5,8 +5,7 @@ class CardComponent extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this.categoria = "comida";
-    this.src =
-      "https://1.bp.blogspot.com/-aES0E44Jtsc/YFjDS-IU0pI/AAAAAAAACjg/u5tmvEtOD-g1xPqf9gAlaBWrywtqEsylwCLcBGAsYHQ/s1920/25790.jpg";
+    this.src ="https://i.pinimg.com/564x/b9/2b/52/b92b52dd2bb281eaa010138f1dd805dc.jpg";
     this.data = null; // Variable para almacenar los datos recibidos del servicio REST
   }
 
@@ -18,7 +17,7 @@ class CardComponent extends HTMLElement {
 
   async loadData() {
     try {
-      const response1 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/ComercioTipoComercio/all");
+      const response1 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/comercio_tipocomercio/all");
       const response2 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/tipocomercio/all");
       if (response1.ok && response2.ok) {
         const data1 = await response1.json();
@@ -75,69 +74,115 @@ class CardComponent extends HTMLElement {
   render() {
     render(
       html`
-        <style>
-          .grid-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Crea 3 columnas de igual ancho */
-            grid-gap: 10px; /* Espacio entre las celdas */
-          }
+      <style>
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Crea 3 columnas de igual ancho */
+    grid-gap: 10px; /* Espacio entre las celdas */
+  }
 
-          .grid-item {
-            background-color: #ccc;
-            padding: 10px;
-          }
+  .grid-item {
+    background-color: #FFFFFF;
+    padding: 10px;
+  }
 
-          .grid-item:last-child {
-            grid-column-start: 3; /* La última celda comenzará en la columna 3 */
-          }
+  .grid-item:last-child {
+    grid-column-start: 3; /* La última celda comenzará en la columna 3 */
+  }
 
-          .grid-itemFinally {
-            grid-column-start: 3; /* El cardOne comenzará en la columna 3 */
-          }
+  .grid-itemFinally {
+    grid-column-start: 3; /* El cardOne comenzará en la columna 3 */
+  }
 
-          .cardOne {
-            width: 100%;
-            height: auto;
-            border-radius: 14px 14px;
-            background-color: rgb(246, 246, 68);
-            cursor: pointer;
-          }
-          .cardOne img {
-            width: 100%;
-            border-radius: 10px;
-          }
-          .cardOne h1 {
-            text-align: center;
-          }
-          .card-content {
-            padding: 16px;
-          }
-        </style>
+  .cardOne {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    background-color: #0D258F; /* Color de fondo principal donde va el nombre de la categoria*/
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Borde sombreado alrededor */
+  }
+
+  .cardOne:hover {
+    transform: scale(1.05); /* Efecto de escala al pasar el cursor */
+  }
+
+  .cardOne::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2); /* Color de superposición */
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+  }
+
+  .cardOne:hover::before {
+    opacity: 1; /* Opacidad de la superposición al pasar el cursor */
+  }
+
+  .cardOne img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    filter: brightness(0.9); /* Nivel de brillo de la imagen */
+  }
+
+  .cardOne h1 {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 18px;
+    color: #fff; /* Color del texto */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Sombra del texto */
+  }
+
+  .card-content {
+    padding: 16px;
+  }
+</style>
+
+    
         <div class="grid-container">
-        ${this.data ? html`
-          ${this.getCategoriasPopulares().map((categoria, index) => html`
-            <div class="grid-item${index === 5 ? ' grid-itemFinally' : ''}">
-              <div class="cardOne">
-                <div></div>
-                <img src="${this.src}" alt="Imagen de la tarjeta" class="tarjeta" onclick="miFuncion()" />
-                <h1>${this.categoria}</h1>
-                <ul>
-                  <li>
-                    <strong>Categoria:</strong> ${categoria}
+        ${this.data && this.data2 ? html`
+          ${this.getCategoriasPopulares().map((categoria, index) => {
+            // Obtener el objeto de la categoría correspondiente
+            const categoriaObj = this.data2.find(item => item.nombre === categoria);
+            // Obtener la URL de imagen desde el atributo "comentario" del objeto de la categoría
+            const imageUrl = categoriaObj?.comentarios || this.src;
+
+            return html`
+              <div class="grid-item${index === 5 ? ' grid-itemFinally' : ''}">
+                <div class="cardOne">
+                  <div></div>
+                  <img src="${imageUrl}" alt="Imagen de la tarjeta" class="tarjeta" onclick="miFuncion()" />
+                  <h1>${categoria}</h1>
+                  <ul>
+                  
                     <br>
-                  </li>
-                  <br>
-                </ul>
+                  </ul>
+                </div>
               </div>
-            </div>
-          `)}
+            `;
+          })}
         ` : html``}
           ${this.data2 && this.data2.length >= 6 ? html`
             <div class="grid-item grid-itemFinally">
               <div class="cardOne" onclick="mostrarCategorias()">
                 <div></div>
                 <img src="${this.src}" alt="Imagen de la tarjeta" class="tarjeta" />
-                <h1>Categorías</h1>
+                <h1>TODAS</h1>
               </div>
             </div>
           ` : html``}
