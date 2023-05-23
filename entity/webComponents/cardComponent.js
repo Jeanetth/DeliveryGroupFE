@@ -14,15 +14,21 @@ class CardComponent extends HTMLElement {
     this.loadData(); // Cargar los datos del servicio REST al iniciar el componente
   }
 
+ 
+
   async loadData() {
     try {
-      const response = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/ComercioTipoComercio/all");
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data); // Verificar los datos devueltos en la consola
-        this.data = data;
+      const response1 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/ComercioTipoComercio/all");
+      const response2 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/tipocomercio/all");
+      if (response1.ok && response2.ok) {
+        const data1 = await response1.json();
+        const data2 = await response2.json();
+        console.log(data1); // Verificar los datos devueltos en la consola
+        console.log(data2); // Verificar los datos devueltos en la consola
+        this.data = data1;
+        this.data2 = data2;
       } else {
-        throw new Error("Error al obtener los datos del servicio REST");
+        throw new Error("Error al obtener los datos de uno o ambos servicios REST");
       }
     } catch (error) {
       console.error("Error al cargar los datos:", error);
@@ -39,9 +45,9 @@ class CardComponent extends HTMLElement {
   //obteniendo las categorias con un foreach e ingresando al json dentro de otro json
   getCategorias() {
     const categorias = new Set();
-    if (this.data) {
-      this.data.forEach(item => {
-        categorias.add(item.tipoComercio.nombre);
+    if (this.data2) {
+      this.data2.forEach(item => {
+        categorias.add(item.nombre);
       });
     }
     return Array.from(categorias);
@@ -126,7 +132,7 @@ class CardComponent extends HTMLElement {
             </div>
           `)}
         ` : html``}
-          ${this.data && this.data.length >= 6 ? html`
+          ${this.data2 && this.data2.length >= 6 ? html`
             <div class="grid-item grid-itemFinally">
               <div class="cardOne" onclick="mostrarCategorias()">
                 <div></div>
