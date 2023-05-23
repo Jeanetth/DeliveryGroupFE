@@ -7,7 +7,7 @@ class CardComponent extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.src = "https://i.pinimg.com/564x/b9/2b/52/b92b52dd2bb281eaa010138f1dd805dc.jpg";
     // Resto del código del constructor...
-    this.comerciosFiltrados = []; 
+      this.comerciosFiltrados = []; // Comercios filtrados
   }
 
   //Manda a llamar el componente cardFetchComponent.js y 
@@ -138,42 +138,41 @@ class CardComponent extends HTMLElement {
 </style>
 
     
-        <div class="grid-container">
-        ${this.data && this.data2 ? html`
-          ${this.getCategoriasPopulares().map((categoria, index) => {
-            // Obtener el objeto de la categoría correspondiente
-            const categoriaObj = this.data2.find(item => item.nombre === categoria);
-            // Obtener la URL de imagen desde el atributo "comentario" del objeto de la categoría
-            const imageUrl = categoriaObj?.comentarios || this.src;
+        
+      <div class="grid-container">
+      ${this.data && this.data2 ? html`
+        ${this.getCategoriasPopulares().map((categoria, index) => {
+          const categoriaObj = this.data2.find(item => item.nombre === categoria);
+          const imageUrl = categoriaObj?.comentarios || this.src;
 
-            return html`
-              <div class="grid-item${index === 5 ? ' grid-itemFinally' : ''}">
-                <div class="cardOne">
-                  <div></div>
-                  <img src="${imageUrl}" alt="Imagen de la tarjeta" class="tarjeta" onclick="miFuncion('${categoria}')" />
-                  <h1>${categoria}</h1>
-                  <ul>
-                  
-                    <br>
-                  </ul>
-                </div>
+          return html`
+            <div class="grid-item${index === 5 ? ' grid-itemFinally' : ''}">
+              <div class="cardOne">
+                <div></div>
+                <img src="${imageUrl}" alt="Imagen de la tarjeta" class="tarjeta" onclick="mostrarcomercios('${categoria}')" />
+                <h1>${categoria}</h1>
+                <ul>
+                  <!-- Agrega aquí los detalles adicionales de la categoría si deseas -->
+                </ul>
               </div>
-            `;
-          })}
-        ` : html``}
-      
-        </div>
+            </div>
+          `;
+        })}
+      ` : html``}
+    </div>
 
-        <div class="grid-container">
-  ${this.comerciosFiltrados ? html`
-    ${this.comerciosFiltrados.map(comercio => {
-      const imageUrl = comercio.descripcion || this.src;
+    <div class="grid-container">
+  ${this.comerciosFiltrados && this.nombresComercios && this.urldescripcion? html`
+    ${this.comerciosFiltrados.map(({ nombre, descripcion }, index) => {
+      const nombreComercio = this.nombresComercios[index];
+      const url = this.urldescripcion[index];
+      
       return html`
         <div class="grid-item">
           <div class="cardOne">
             <div></div>
-            <img src="${imageUrl}" alt="Imagen de la tarjeta" class="tarjeta" />
-            <h1>${comercio.nombre}</h1>
+            <img src="${url}" alt="Imagen de la tarjeta" class="tarjeta" />
+            <h1>${nombreComercio}</h1>
             <ul>
               <!-- Agrega aquí los detalles adicionales del comercio si deseas -->
             </ul>
@@ -182,37 +181,25 @@ class CardComponent extends HTMLElement {
       `;
     })}
   ` : html``}
-</div>
-
-
-        
-      
-      `,
-      this.shadowRoot
-    );
-  }
+    </div>
+  `,
+  this.shadowRoot);
+}
 }
 
-
-window.miFuncion = function (categoria) {
+window.mostrarcomercios = function (categoria) {
   const cardComponent = document.querySelector("cards-one");
   const comerciosFiltrados = cardComponent.data.filter(comercio => comercio.tipoComercio.nombre === categoria);
-  cardComponent.comerciosFiltrados = comerciosFiltrados; // Asignar los comercios filtrados a la propiedad comerciosFiltrados
+  const nombresComercios = comerciosFiltrados.map(data1 => data1.comercio.nombre);
+  const urldescripcion = comerciosFiltrados.map(data1 => data1.comercio.descripcion);
+  cardComponent.comerciosFiltrados = comerciosFiltrados;
+  cardComponent.nombresComercios = nombresComercios;
+  cardComponent.urldescripcion = urldescripcion;
+  cardComponent.render();
   console.log(comerciosFiltrados);
-  setTimeout(() => {
-    cardComponent.render(); // Volver a renderizar el componente
-  }, 0);
-  
-  // Aquí puedes realizar cualquier otra acción que desees con los comercios filtrados
-  // Por ejemplo, puedes llamar a otra función o realizar alguna operación adicional
-  
-  // Ejemplo: Imprimir los nombres de los comercios filtrados
-  comerciosFiltrados.forEach(comercio => {
-    console.log(comercio.nombre);
-  });
-}
-
-
+  console.log(nombresComercios);
+  console.log(urldescripcion);
+};
 
 
 customElements.define("cards-one", CardComponent);
