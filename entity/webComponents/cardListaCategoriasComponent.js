@@ -1,7 +1,6 @@
-
 import './cardFetchComponent.js'; 
 import { html, render } from "../../LIB/lit-html.js";
-class CardComponent extends HTMLElement {
+class cardListaCategoriasComponent extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
@@ -34,22 +33,27 @@ class CardComponent extends HTMLElement {
     });
   }
 
-//muestra las 6 categorias mas populares(las que mas comercios tiene)
-//
-  getCategoriasPopulares() {
-    const categoriasCount = new Map();
-    if (this.data) {
-      this.data.forEach(item => {
-        const comercioNombre = item.tipoComercio.nombre;
-        if (categoriasCount.has(comercioNombre)) {
-          categoriasCount.set(comercioNombre, categoriasCount.get(comercioNombre) + 1);
-        } else {
-          categoriasCount.set(comercioNombre, 1);
+  
+  getCategorias() {
+    const categorias = [];
+    const urlImagenes = new Map();
+    if (this.data2) {
+      this.data2.forEach(item => {
+        const categoria = item.nombre;
+        const comentarios = item.comentarios;
+        if (categoria && comentarios && comentarios) {
+          categorias.push({ categoria, imagen: comentarios });
         }
       });
     }
-    const categoriasSorted = Array.from(categoriasCount.entries()).sort((a, b) => b[1] - a[1]);
-    return categoriasSorted.slice(0, 6).map(entry => entry[0]);
+    return categorias;
+  }
+
+  // Mostrar categorias en orden alfabetico
+  getCategoriasOrdenadas() {
+    const categorias = this.getCategorias();
+    categorias.sort((a, b) => a.categoria.localeCompare(b.categoria));
+    return categorias;
   }
 
   render() {
@@ -136,30 +140,15 @@ class CardComponent extends HTMLElement {
 
     
         <div class="grid-container">
-        ${this.data && this.data2 ? html`
-          ${this.getCategoriasPopulares().map((categoria, index) => {
-            // Obtener el objeto de la categoría correspondiente
-            const categoriaObj = this.data2.find(item => item.nombre === categoria);
-            // Obtener la URL de imagen desde el atributo "comentario" del objeto de la categoría
-            const imageUrl = categoriaObj?.comentarios || this.src;
-
-            return html`
-              <div class="grid-item${index === 5 ? ' grid-itemFinally' : ''}">
-                <div class="cardOne">
-                  <div></div>
-                  <img src="${imageUrl}" alt="Imagen de la tarjeta" class="tarjeta" onclick="miFuncion('${categoria}')" />
-                  <h1>${categoria}</h1>
-                  <ul>
-                  
-                    <br>
-                  </ul>
-                </div>
+          ${this.data2 && this.data2.length >= 6 ? html`
+            <div class="grid-item grid-itemFinally">
+              <div class="cardOne" onclick="mostrarCategorias()">
+                <div></div>
+                <img src="${this.src}" alt="Imagen de la tarjeta" class="tarjeta" />
+                <h1>TODAS</h1>
               </div>
-            `;
-          })}
-        ` : html``}
-        
-        
+            </div>
+          ` : html``}
         </div>
       `,
       this.shadowRoot
@@ -167,7 +156,36 @@ class CardComponent extends HTMLElement {
   }
 }
 
+window.mostrarCategorias = function () {
+  const cardComponent = document.querySelector("cards-lista-categorias");
+  if (cardComponent) {
+    const categorias = cardComponent.getCategoriasOrdenadas();
+
+    const categoriasContainer = document.createElement("div");
+    categoriasContainer.classList.add("grid-container");
+
+    categorias.forEach((categoriaObj, index) => {
+      const cardOne = document.createElement("div");
+      cardOne.classList.add("cardOne");
+
+      const nombreCategoria = document.createElement("h1");
+      nombreCategoria.textContent = categoriaObj.categoria;
+
+      const imagenCategoria = document.createElement("img");
+      imagenCategoria.src = categoriaObj.imagen;
+      cardOne.appendChild(imagenCategoria);
+      cardOne.appendChild(nombreCategoria);
+      
+
+      categoriasContainer.appendChild(cardOne);
+    });
+
+    const container = document.getElementById("categorias-container");
+    container.innerHTML = "";
+    container.appendChild(categoriasContainer);
+  }
+};
 
 
 
-customElements.define("cards-one", CardComponent);
+customElements.define("cards-lista-categorias", cardListaCategoriasComponent);
