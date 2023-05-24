@@ -23,11 +23,13 @@ class CardComponent extends HTMLElement {
           const data1 = event.detail.data1;
           const data2 = event.detail.data2;
           const data3 = event.detail.data3;
+          const data4 = event.detail.data4;
   
           // Asignar los datos a las propiedades del componente CardComponent
           this.data = data1;
           this.data2 = data2;
           this.data3 = data3;
+          this.data4 = data4;
           // Renderizar el componente
           this.render();
         });
@@ -35,6 +37,8 @@ class CardComponent extends HTMLElement {
     });
   }
 
+
+  
 //muestra las 6 categorias mas populares(las que mas comercios tiene)
 //
   getCategoriasPopulares() {
@@ -203,6 +207,30 @@ class CardComponent extends HTMLElement {
     font-weight: bold;
     font-size: 40px
   }
+
+  /* Estilo personalizado para la lista */
+  .containerSelect {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    font-size: 24px;
+  }
+
+  .dropdown {
+    width: 300px;
+  }
+
+  .dropdown select {
+    width: 100%;
+    padding: 10px;
+    font-size: 24px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    appearance: none;
+  }
   
 </style>
 
@@ -231,9 +259,9 @@ class CardComponent extends HTMLElement {
         })}
       ` : html``}
     </div>
-    <br><br><br><br>
+    <br>
 
-    
+
     <div id="scrollContainer">
     <div id="messageContainer"><p>COMERCIOS</p></div>
     <div class="grid-container">
@@ -286,6 +314,29 @@ class CardComponent extends HTMLElement {
       ` : html``}
     </div>
   </div>
+
+
+
+  <div class="containerSelect">
+  <div id="messageContainer">
+    <p>SUCURSALES</p>
+  </div>
+  <div class="dropdown">
+  <select onchange="redirectToUrl(this)">
+      ${this.sucursalesFiltradas && this.nombreSucursal && this.linkSucursal ? html`
+        ${this.sucursalesFiltradas.map(({ nombre, pathLogo }, index) => {
+          const nombreSU = this.nombreSucursal[index];
+          const urlSU = this.linkSucursal[index];
+          
+          return html`
+            <option value="${urlSU}">${nombreSU}</option>
+          `;
+        })}
+      ` : html``}
+    </select>
+  </div>
+</div>
+
  
   `,
   this.shadowRoot);
@@ -318,21 +369,39 @@ window.mostrarcomercios = function (categoria) {
 window.mostrarproductos = function (nombreComercio) {
   const cardComponent = document.querySelector("cards-one");
   const productosFiltrados = cardComponent.data3.filter(comercioproductos => comercioproductos.comercio.nombre === nombreComercio);
-  
+  const sucursalesFiltradas =cardComponent.data4.filter(sucursales => sucursales.idComercio.nombre === nombreComercio);
+
   // Ordenar los comercios alfabéticamente por nombre
   productosFiltrados.sort((a, b) => a.comercio.nombre.localeCompare(b.comercio.nombre));
+  sucursalesFiltradas.sort((a, b) => a.nombre .localeCompare(b.nombre));
   
   const nombresProductos = productosFiltrados.map(data3 => data3.producto.nombre);
   const urldescripcionP = productosFiltrados.map(data3 => data3.producto.descripcion);
+  const nombreSucursal =sucursalesFiltradas.map(data4 => data4.nombre)
+  const linkSucursal =sucursalesFiltradas.map(data4 => data4.pathLogo)
+
   cardComponent.productosFiltrados = productosFiltrados;
+  cardComponent.sucursalesFiltradas = sucursalesFiltradas;
   cardComponent.nombresProductos = nombresProductos;
   cardComponent.urldescripcionP = urldescripcionP;
+  cardComponent.nombreSucursal = nombreSucursal;
+  cardComponent.linkSucursal = linkSucursal;
+
   cardComponent.render();
   console.log(productosFiltrados);
+  console.log(sucursalesFiltradas);
   console.log(nombresProductos);
   console.log(urldescripcionP);
+  console.log(nombreSucursal);
+  console.log(linkSucursal);
 };
 
-
+//funcion para mandar que direccionar al waze
+window.redirectToUrl = function(selectElement) {
+  const selectedOption = selectElement.options[selectElement.selectedIndex];
+  const encodedUrl = selectedOption.value;
+  const url = decodeURIComponent(encodedUrl);
+  window.open(url, '_blank');
+}
 
 customElements.define("cards-one", CardComponent);
