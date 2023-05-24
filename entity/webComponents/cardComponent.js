@@ -4,7 +4,7 @@ class CardComponent extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this.src = "https://i.pinimg.com/564x/b9/2b/52/b92b52dd2bb281eaa010138f1dd805dc.jpg";
+    this.src = "https://i.pinimg.com/564x/a5/71/74/a571741063f7b6e354d67fba4db8d517.jpg";
     // Resto del código del constructor...
       this.comerciosFiltrados = []; // Comercios filtrados
   }
@@ -57,6 +57,17 @@ class CardComponent extends HTMLElement {
     return categoriasSorted.slice(0, 6).map(entry => entry[0]);
   }
 
+
+  getTodasCategorias() {
+    const categoriasSet = new Set();
+    if (this.data2) {
+      this.data2.forEach(item => {
+        const comercioNombre = item.nombre;
+        categoriasSet.add(comercioNombre);
+      });
+    }
+    return Array.from(categoriasSet);
+  }
 
   
   render() {
@@ -231,11 +242,18 @@ class CardComponent extends HTMLElement {
     background-color: #fff;
     appearance: none;
   }
+
+  .grid-container2 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    justify-content: flex-end; 
+  }
   
 </style>
 
     
-        
+<!-- MOSTRAR CATEGORIAS POPULARES -->
       <div class="grid-container">
       ${this.data && this.data2 ? html`
         ${this.getCategoriasPopulares().map((categoria, index) => {
@@ -261,6 +279,45 @@ class CardComponent extends HTMLElement {
     </div>
     <br>
 
+    <!-- CARD ONE (BOTON DE TODAS LAS CATEGORIAS) -->
+    <div class="grid-container2">
+    ${this.data2 && this.data2? html`
+      <div class="grid-item grid-itemFinally">
+        <div class="cardOne" onclick="mostrartodaslascategorias()">
+          <div></div>
+          <img src="${this.src}" alt="Imagen de la tarjeta" class="tarjeta" />
+          <h1>Todas las Categorias</h1>
+        </div>
+      </div>
+    ` : html``}
+  </div>
+
+  <!-- OBTIENE TODAS LAS CATEGORIAS -->
+  <div class="grid-container">
+      ${this.tiposcomercios  && this.tiposcom && this.urlcomen? html`
+        ${this.tiposcomercios.map(({ nombre, descripcion }, index) => {
+          const categoria = this.tiposcom[index];
+          const urlTP = this.urlcomen[index];
+          
+          return html`
+            <div class="grid-item">
+              <div class="cardOne">
+                <div></div>
+                <img src="${urlTP}" alt="Imagen de la tarjeta" class="tarjeta" onclick="mostrarcomercios('${categoria}')" )"  />
+                <h1>${categoria}</h1>
+                <ul>
+                  <!-- Agrega aquí los detalles adicionales del comercio si deseas -->
+                </ul>
+              </div>
+            </div>
+          `;
+        })}
+      ` : html``}
+    </div>
+
+
+
+    <!-- OBTIENE TODOS LOS COMERCIOS SEGUN LA CATEGORIA SELECCIONADA -->
 
     <div id="scrollContainer">
     <div id="messageContainer"><p>COMERCIOS</p></div>
@@ -288,7 +345,7 @@ class CardComponent extends HTMLElement {
   </div>
   
 
-
+  <!-- OBTIENE TODOS LOS PRODUCTOS DE UN COMERCIO SELECCIONADO-->
 
   <div id="scrollContainer">
   <div id="messageContainer"><p>PRODUCTOS</p></div>
@@ -316,6 +373,7 @@ class CardComponent extends HTMLElement {
   </div>
 
 
+  <!-- OBTIENE LAS SUCURSALES -->
 
   <div class="containerSelect">
   <div id="messageContainer">
@@ -345,7 +403,26 @@ class CardComponent extends HTMLElement {
 
 
 
-//funcion para mostrar comercios 
+window.mostrartodaslascategorias = function () {
+  const cardComponent = document.querySelector("cards-one");
+  const tiposcomercios = cardComponent.data2.filter(tipo => tipo.nombre );
+  
+  // Ordenar los comercios alfabéticamente por nombre
+  tiposcomercios.sort((a, b) => a.nombre.localeCompare(b.nombre));
+  
+  const tiposcom = tiposcomercios.map(data2 => data2.nombre);
+  const urlcomen= tiposcomercios.map(data2 => data2.comentarios);
+  cardComponent.tiposcomercios = tiposcomercios;
+  cardComponent.tiposcom = tiposcom;
+  cardComponent.urlcomen = urlcomen;
+  cardComponent.render();
+  console.log(tiposcomercios);
+  console.log(tiposcom);
+  console.log(urlcomen);
+};
+
+
+
 window.mostrarcomercios = function (categoria) {
   const cardComponent = document.querySelector("cards-one");
   const comerciosFiltrados = cardComponent.data.filter(comercio => comercio.tipoComercio.nombre === categoria);
@@ -403,5 +480,9 @@ window.redirectToUrl = function(selectElement) {
   const url = decodeURIComponent(encodedUrl);
   window.open(url, '_blank');
 }
+
+
+
+
 
 customElements.define("cards-one", CardComponent);
