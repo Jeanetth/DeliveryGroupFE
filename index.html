@@ -11,6 +11,19 @@
 </head>
 <body>
   
+  <script>
+    if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("serviceWorker.js").then((registration) => {
+          console.log("Service Worker registrado exitosamente:", registration);
+        })
+        .catch((error) => {
+          console.log("Error al registrar el Service Worker:", error);
+        });
+    });
+  }
+  </script>
+
   <card-fetch></card-fetch>
   <cards-one></cards-one>
   <cards-comercios></cards-comercios>
