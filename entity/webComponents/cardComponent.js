@@ -245,6 +245,10 @@ class CardComponent extends HTMLElement {
 window.mostrarcomercios = function (categoria) {
   const cardComponent = document.querySelector("cards-one");
   const comerciosFiltrados = cardComponent.data.filter(comercio => comercio.tipoComercio.nombre === categoria);
+  
+  // Ordenar los comercios alfabéticamente por nombre
+  comerciosFiltrados.sort((a, b) => a.comercio.nombre.localeCompare(b.comercio.nombre));
+  
   const nombresComercios = comerciosFiltrados.map(data1 => data1.comercio.nombre);
   const urldescripcion = comerciosFiltrados.map(data1 => data1.comercio.descripcion);
   cardComponent.comerciosFiltrados = comerciosFiltrados;
@@ -255,6 +259,7 @@ window.mostrarcomercios = function (categoria) {
   console.log(nombresComercios);
   console.log(urldescripcion);
 };
+
 
 
 customElements.define("cards-one", CardComponent);

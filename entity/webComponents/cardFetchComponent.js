@@ -35,9 +35,7 @@ class CardFetchComponent extends HTMLElement {
     }
   
     render() {
-      // Implementa la lógica de renderizado aquí
-      // Puedes acceder a this.data1, this.data2, this.categoria, this.src para mostrar los datos en el componente
-      // Utiliza this.shadowRoot para renderizar el contenido en el shadow DOM
+
     }
   }
   

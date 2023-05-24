@@ -285,6 +285,10 @@ window.mostrarCategorias = function () {
 function almacenarCategoria(categoria) {
   const cardComponent = document.querySelector("cards-lista-categorias");
   const comerciosFiltrados = cardComponent.data.filter(comercio => comercio.tipoComercio.nombre === categoria);
+  
+  // Ordenar los comercios alfabéticamente por nombre
+  comerciosFiltrados.sort((a, b) => a.comercio.nombre.localeCompare(b.comercio.nombre));
+  
   const nombresComercios = comerciosFiltrados.map(data1 => data1.comercio.nombre);
   const urldescripcion = comerciosFiltrados.map(data1 => data1.comercio.descripcion);
   cardComponent.comerciosFiltrados = comerciosFiltrados;
@@ -295,6 +299,7 @@ function almacenarCategoria(categoria) {
   console.log(nombresComercios);
   console.log(urldescripcion);
 }
+
 
 //funcion para mostrar comercios 
 
