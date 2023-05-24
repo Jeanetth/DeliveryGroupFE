@@ -79,7 +79,6 @@ class cardListaCategoriasComponent extends HTMLElement {
   .grid-itemFinally {
     grid-column-start: 3; /* El cardOne comenzará en la columna 3 */
   }
-
   .cardOne {
     position: relative;
     display: flex;
@@ -137,10 +136,99 @@ class cardListaCategoriasComponent extends HTMLElement {
   .card-content {
     padding: 16px;
   }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .grid-container2 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    justify-content: flex-end; 
+  }
+  
+  .grid-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f1f1f1;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .cardOne {
+    width: 100%;
+    text-align: left;
+  }
+
+  .cardOne2 {
+    width: 100%;
+    text-align: left;
+  }
+  
+  
+  .tarjeta {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  #scrollContainer {
+    max-height: 600px; /* Altura máxima del contenedor con desplazamiento */
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: #888888 #f1f1f1;
+  }
+  
+
+  /* Estilo personalizado para la barra de desplazamiento */
+  #scrollContainer::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  #scrollContainer::-webkit-scrollbar-thumb {
+    background-color: #888888;
+  }
+  
+  #scrollContainer::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+  }
 </style>
 
+
+<div id="scrollContainer">
+<div class="grid-container">
+${this.comerciosFiltrados && this.nombresComercios && this.urldescripcion? html`
+${this.comerciosFiltrados.map(({ nombre, descripcion }, index) => {
+  const nombreComercio = this.nombresComercios[index];
+  const url = this.urldescripcion[index];
+  
+  return html`
+    <div class="grid-item">
+      <div class="cardOne">
+        <div></div>
+        <img src="${url}" alt="Imagen de la tarjeta" class="tarjeta" />
+        <h1>${nombreComercio}</h1>
+        <ul>
+          <!-- Agrega aquí los detalles adicionales del comercio si deseas -->
+        </ul>
+      </div>
+    </div>
+  `;
+})}
+` : html``}
+</div>
+</div>
+
     
-        <div class="grid-container">
+        <div class="grid-container2">
           ${this.data2 && this.data2.length >= 6 ? html`
             <div class="grid-item grid-itemFinally">
               <div class="cardOne" onclick="mostrarCategorias()">
@@ -151,6 +239,8 @@ class cardListaCategoriasComponent extends HTMLElement {
             </div>
           ` : html``}
         </div>
+
+        
       `,
       this.shadowRoot
     );
@@ -174,9 +264,14 @@ window.mostrarCategorias = function () {
 
       const imagenCategoria = document.createElement("img");
       imagenCategoria.src = categoriaObj.imagen;
+
+      // Agregar evento onclick para almacenar la categoría
+      cardOne.addEventListener("click", () => {
+        almacenarCategoria(categoriaObj.categoria);
+      });
+
       cardOne.appendChild(imagenCategoria);
       cardOne.appendChild(nombreCategoria);
-      
 
       categoriasContainer.appendChild(cardOne);
     });
@@ -186,6 +281,23 @@ window.mostrarCategorias = function () {
     container.appendChild(categoriasContainer);
   }
 };
+
+function almacenarCategoria(categoria) {
+  const cardComponent = document.querySelector("cards-lista-categorias");
+  const comerciosFiltrados = cardComponent.data.filter(comercio => comercio.tipoComercio.nombre === categoria);
+  const nombresComercios = comerciosFiltrados.map(data1 => data1.comercio.nombre);
+  const urldescripcion = comerciosFiltrados.map(data1 => data1.comercio.descripcion);
+  cardComponent.comerciosFiltrados = comerciosFiltrados;
+  cardComponent.nombresComercios = nombresComercios;
+  cardComponent.urldescripcion = urldescripcion;
+  cardComponent.render();
+  console.log(comerciosFiltrados);
+  console.log(nombresComercios);
+  console.log(urldescripcion);
+}
+
+//funcion para mostrar comercios 
+
 
 
 
