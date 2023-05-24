@@ -1,5 +1,4 @@
-
-import './cardFetchComponent.js'; 
+import '../../boundary/webComponents/cardFetchComponent.js'; 
 import { html, render } from "../../LIB/lit-html.js";
 class CardComponent extends HTMLElement {
   constructor() {
@@ -23,11 +22,12 @@ class CardComponent extends HTMLElement {
           // Obtener los datos del evento
           const data1 = event.detail.data1;
           const data2 = event.detail.data2;
+          const data3 = event.detail.data3;
   
           // Asignar los datos a las propiedades del componente CardComponent
           this.data = data1;
           this.data2 = data2;
-  
+          this.data3 = data3;
           // Renderizar el componente
           this.render();
         });
@@ -136,12 +136,7 @@ class CardComponent extends HTMLElement {
     padding: 16px;
   }
 
-  #scrollContainer {
-    max-height: 600px; /* Altura máxima del contenedor con desplazamiento */
-    overflow-y: scroll;
-    scrollbar-width: thin;
-    scrollbar-color: #888888 #f1f1f1;
-  }
+ 
   
   .grid-container {
     display: grid;
@@ -174,6 +169,13 @@ class CardComponent extends HTMLElement {
   }
   
   /* Estilo personalizado para la barra de desplazamiento */
+
+  #scrollContainer {
+    max-height: 600px; /* Altura máxima del contenedor con desplazamiento */
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: #888888 #f1f1f1;
+  }
   #scrollContainer::-webkit-scrollbar {
     width: 8px;
   }
@@ -184,6 +186,22 @@ class CardComponent extends HTMLElement {
   
   #scrollContainer::-webkit-scrollbar-track {
     background-color: #f1f1f1;
+  }
+
+  #messageContainer {
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+    padding: 10px;
+    text-align: center;
+    
+  }
+  
+  #messageContainer p {
+    margin: 0;
+    color: #000000;
+    font-weight: bold;
+    font-size: 40px
   }
   
 </style>
@@ -198,6 +216,7 @@ class CardComponent extends HTMLElement {
 
           return html`
             <div class="grid-item${index === 5 ? ' grid-itemFinally' : ''}">
+           
               <div class="cardOne">
                 <div></div>
                 <img src="${imageUrl}" alt="Imagen de la tarjeta" class="tarjeta" onclick="mostrarcomercios('${categoria}')" />
@@ -207,13 +226,16 @@ class CardComponent extends HTMLElement {
                 </ul>
               </div>
             </div>
+            
           `;
         })}
       ` : html``}
     </div>
+    <br><br><br><br>
 
-    <div id="scrollContainer">
     
+    <div id="scrollContainer">
+    <div id="messageContainer"><p>COMERCIOS</p></div>
     <div class="grid-container">
       ${this.comerciosFiltrados && this.nombresComercios && this.urldescripcion? html`
         ${this.comerciosFiltrados.map(({ nombre, descripcion }, index) => {
@@ -224,7 +246,7 @@ class CardComponent extends HTMLElement {
             <div class="grid-item">
               <div class="cardOne">
                 <div></div>
-                <img src="${url}" alt="Imagen de la tarjeta" class="tarjeta" />
+                <img src="${url}" alt="Imagen de la tarjeta" class="tarjeta" onclick="mostrarproductos('${nombreComercio}')"  />
                 <h1>${nombreComercio}</h1>
                 <ul>
                   <!-- Agrega aquí los detalles adicionales del comercio si deseas -->
@@ -236,10 +258,41 @@ class CardComponent extends HTMLElement {
       ` : html``}
     </div>
   </div>
+  
+
+
+
+  <div id="scrollContainer">
+  <div id="messageContainer"><p>PRODUCTOS</p></div>
+    <div class="grid-container">
+      ${this.productosFiltrados && this.nombresProductos && this.urldescripcionP? html`
+        ${this.productosFiltrados.map(({ nombre, descripcion }, index) => {
+          const nombreProducto = this.nombresProductos[index];
+          const url = this.urldescripcionP[index];
+          
+          return html`
+            <div class="grid-item">
+              <div class="cardOne">
+                <div></div>
+                <img src="${url}" alt="Imagen de la tarjeta" class="tarjeta" )"  />
+                <h1>${nombreProducto}</h1>
+                <ul>
+                  <!-- Agrega aquí los detalles adicionales del comercio si deseas -->
+                </ul>
+              </div>
+            </div>
+          `;
+        })}
+      ` : html``}
+    </div>
+  </div>
+ 
   `,
   this.shadowRoot);
 }
 }
+
+
 
 //funcion para mostrar comercios 
 window.mostrarcomercios = function (categoria) {
@@ -258,6 +311,26 @@ window.mostrarcomercios = function (categoria) {
   console.log(comerciosFiltrados);
   console.log(nombresComercios);
   console.log(urldescripcion);
+};
+
+
+//funcion para mostrar productos de los comercios 
+window.mostrarproductos = function (nombreComercio) {
+  const cardComponent = document.querySelector("cards-one");
+  const productosFiltrados = cardComponent.data3.filter(comercioproductos => comercioproductos.comercio.nombre === nombreComercio);
+  
+  // Ordenar los comercios alfabéticamente por nombre
+  productosFiltrados.sort((a, b) => a.comercio.nombre.localeCompare(b.comercio.nombre));
+  
+  const nombresProductos = productosFiltrados.map(data3 => data3.producto.nombre);
+  const urldescripcionP = productosFiltrados.map(data3 => data3.producto.descripcion);
+  cardComponent.productosFiltrados = productosFiltrados;
+  cardComponent.nombresProductos = nombresProductos;
+  cardComponent.urldescripcionP = urldescripcionP;
+  cardComponent.render();
+  console.log(productosFiltrados);
+  console.log(nombresProductos);
+  console.log(urldescripcionP);
 };
 
 

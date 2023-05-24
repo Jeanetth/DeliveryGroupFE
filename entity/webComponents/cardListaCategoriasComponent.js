@@ -1,10 +1,10 @@
-import './cardFetchComponent.js'; 
+import '../../boundary/webComponents/cardFetchComponent.js'; 
 import { html, render } from "../../LIB/lit-html.js";
 class cardListaCategoriasComponent extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this.src = "https://i.pinimg.com/564x/b9/2b/52/b92b52dd2bb281eaa010138f1dd805dc.jpg";
+    this.src = "https://i.pinimg.com/564x/a5/71/74/a571741063f7b6e354d67fba4db8d517.jpg";
     // Resto del código del constructor...
   }
 
@@ -203,29 +203,7 @@ class cardListaCategoriasComponent extends HTMLElement {
 </style>
 
 
-<div id="scrollContainer">
-<div class="grid-container">
-${this.comerciosFiltrados && this.nombresComercios && this.urldescripcion? html`
-${this.comerciosFiltrados.map(({ nombre, descripcion }, index) => {
-  const nombreComercio = this.nombresComercios[index];
-  const url = this.urldescripcion[index];
-  
-  return html`
-    <div class="grid-item">
-      <div class="cardOne">
-        <div></div>
-        <img src="${url}" alt="Imagen de la tarjeta" class="tarjeta" />
-        <h1>${nombreComercio}</h1>
-        <ul>
-          <!-- Agrega aquí los detalles adicionales del comercio si deseas -->
-        </ul>
-      </div>
-    </div>
-  `;
-})}
-` : html``}
-</div>
-</div>
+
 
     
         <div class="grid-container2">
@@ -234,12 +212,36 @@ ${this.comerciosFiltrados.map(({ nombre, descripcion }, index) => {
               <div class="cardOne" onclick="mostrarCategorias()">
                 <div></div>
                 <img src="${this.src}" alt="Imagen de la tarjeta" class="tarjeta" />
-                <h1>TODAS</h1>
+                <h1>Todas las Categorias</h1>
               </div>
             </div>
           ` : html``}
         </div>
 
+        
+        <div id="scrollContainer">
+        <div class="grid-container">
+        ${this.comerciosFiltrados && this.nombresComercios && this.urldescripcion? html`
+        ${this.comerciosFiltrados.map(({ nombre, descripcion }, index) => {
+          const nombreComercio = this.nombresComercios[index];
+          const url = this.urldescripcion[index];
+          
+          return html`
+            <div class="grid-item">
+              <div class="cardOne">
+                <div></div>
+                <img src="${url}" alt="Imagen de la tarjeta" class="tarjeta" />
+                <h1>${nombreComercio}</h1>
+                <ul>
+                  <!-- Agrega aquí los detalles adicionales del comercio si deseas -->
+                </ul>
+              </div>
+            </div>
+          `;
+        })}
+        ` : html``}
+        </div>
+        </div>
         
       `,
       this.shadowRoot

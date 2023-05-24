@@ -16,13 +16,16 @@ class CardFetchComponent extends HTMLElement {
       try {
         const response1 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/comercio_tipocomercio/all");
         const response2 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/tipocomercio/all");
-        if (response1.ok && response2.ok) {
+        const response3 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/comercio_productos/all");
+        if (response1.ok && response2.ok && response3.ok) {
           this.data1 = await response1.json();
           this.data2 = await response2.json();
+          this.data3 = await response3.json();
           console.log(this.data1);
           console.log(this.data2);
+          console.log(this.data3);
           
-          const event = new CustomEvent('data-updated', { detail: { data1: this.data1, data2: this.data2 } });
+          const event = new CustomEvent('data-updated', { detail: { data1: this.data1, data2: this.data2, data3: this.data3 }});
           this.dispatchEvent(event);
           
           this.render();
