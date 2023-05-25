@@ -1,168 +1,16 @@
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr); /* Crea 3 columnas de igual ancho */
-  grid-gap: 10px; /* Espacio entre las celdas */
-}
-
-.grid-item {
-  background-color: #FFFFFF;
-  padding: 10px;
-}
-
-.grid-item:last-child {
-  grid-column-start: 3; /* La última celda comenzará en la columna 3 */
-}
-
-.grid-itemFinally {
-  grid-column-start: 3; /* El cardOne comenzará en la columna 3 */
-}
-
-.cardOne {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: auto;
-  border-radius: 14px;
-  background-color: #0D258F; /* Color de fondo principal donde va el nombre de la categoria*/
-  cursor: pointer;
-  overflow: hidden;
-  transition: transform 0.3s ease;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Borde sombreado alrededor */
-}
-
-.cardOne:hover {
-  transform: scale(1.05); /* Efecto de escala al pasar el cursor */
-}
-
-.cardOne::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.2); /* Color de superposición */
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  opacity: 0;
-}
-
-.cardOne:hover::before {
-  opacity: 1; /* Opacidad de la superposición al pasar el cursor */
-}
-
-.cardOne img {
-  width: 200%;
-  max-height: 200px;
-  object-fit: cover;
-  border-radius: 10px;
-  filter: brightness(0.9); /* Nivel de brillo de la imagen */
-}
-
-.cardOne h1 {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 18px;
-  color: #fff; /* Color del texto */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Sombra del texto */
-}
-
-.card-content {
-  padding: 16px;
-}
-  
-.card {
-  display: flex;
-  align-items: center;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
-  overflow: hidden;
-
-  width: 800px;
-  height: max-content;
-}
-
-.card-image {
-  width: 200px;
-  height: auto;
-}
-
-.card-content {
-  margin-right: 20px;
-}
-
-
-
-.card-content {
-  padding: 16px;
-}
-
-/* Estilos adicionales para hacerlo más atractivo */
-.card {
-  transition: box-shadow 0.3s ease;
-  width: auto;
-  max-height: max-content;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Aumentar los valores aquí */
-}
-
-.card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.card-image {
-  border-radius: 8px 0 0 8px;
-}
-
-.card-content {
-  background-color: #f5f5f5;
-  height: 500;
-}
-
-.card-title {
-  font-weight: bold;
-}
-
-
-.h1inicio {
-  font-size: 24px;
-  color: #333333;
-  margin: 0;
-  padding-left: 20px;
-  margin-left: 20px;
-
-
-}
-
-.h1instalar {
-  font-size: 24px;
-  color: #333333;
-  margin: 0;
-  
-}
-
-.tablatitulos{
-  float: right;
-  margin-left: 900px;
-  
-}
-.titulo-celda {
-  padding: 30px;
-}
-
-
-
-/* Estilos adicionales para hacerlo más atractivo */
+/* Estilos generales */
 body {
-  
+  font-family: Arial, sans-serif;
   background-color: #f5f5f5;
-  
 }
 
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Estilos de la categoría de populares */
 .h1cat-populares {
   text-align: center;
   font-size: 36px;
@@ -175,4 +23,140 @@ body {
   background: linear-gradient(to right, #000000, #000000);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* Estilos de la tabla de títulos */
+.tablatitulos {
+  float: right;
+  margin-left: 900px;
+}
+
+.titulo-celda {
+  padding: 30px;
+}
+
+/* Estilos de las tarjetas */
+.card {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(3, 3, 3, 1.1);
+  background-color: #ffffff;
+  overflow: hidden;
+  margin-bottom: 20px;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(3, 3, 3, 1.1);
+}
+
+.card-image {
+  width: 200px;
+  height: auto;
+  border-radius: 8px 0 0 8px;
+}
+
+.card-content {
+  padding: 16px;
+}
+
+.card-title {
+  font-weight: bold;
+}
+
+/* Estilos de la sección de inicio */
+.h1inicio {
+  font-size: 24px;
+  color: #333333;
+  margin: 0;
+  padding-left: 20px;
+  margin-left: 20px;
+}
+
+/* Estilos de la sección de instalación */
+.h1instalar {
+  font-size: 24px;
+  color: #333333;
+  margin: 0;
+}
+
+/* Estilos responsivos */
+@media screen and (max-width: 1200px) {
+  .container {
+    padding: 10px;
+  }
+  
+  .tablatitulos {
+    justify-content: flex-end;
+    margin-left: 0;
+  }
+  
+  .card-image {
+    width: 150px;
+  }
+  
+  .card-content {
+    margin-right: 10px;
+  }
+  
+  .h1cat-populares {
+    font-size: 28px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .tablatitulos {
+    display: none;
+  }
+  
+  .card {
+    flex-direction: column;
+  }
+  
+  .card-image {
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+  }
+  
+  .card-content {
+    padding: 10px;
+  }
+  
+  .h1inicio,
+  .h1instalar {
+    font-size: 20px;
+    padding-left: 10px;
+    margin-left: 10px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 5px;
+  }
+  
+  .card-title {
+    font-size: 16px;
+  }
+  
+  .h1inicio,
+  .h1instalar {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .card {
+    margin-bottom: 10px;
+  }
+  
+  .card-title {
+    font-size: 14px;
+  }
+  
+  .h1inicio,
+  .h1instalar {
+    font-size: 16px;
+  }
 }

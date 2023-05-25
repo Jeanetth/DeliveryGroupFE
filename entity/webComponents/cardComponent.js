@@ -1,5 +1,7 @@
+
 import '../../boundary/webComponents/cardFetchComponent.js'; 
 import { html, render } from "../../LIB/lit-html.js";
+import { getCategoriasPopulares } from '../../control/webComponents/CategoriasPopulares.js'; 
 class CardComponent extends HTMLElement {
   constructor() {
     super();
@@ -15,7 +17,6 @@ class CardComponent extends HTMLElement {
     document.addEventListener("DOMContentLoaded", () => {
       // Obtener una referencia al componente CardFetch
       const cardFetchComponent = document.querySelector("card-fetch");
-  
       if (cardFetchComponent) {
         // Escuchar el evento personalizado 'data-updated' del componente CardFetch
         cardFetchComponent.addEventListener('data-updated', (event) => {
@@ -37,226 +38,23 @@ class CardComponent extends HTMLElement {
     });
   }
 
-
-  
 //muestra las 6 categorias mas populares(las que mas comercios tiene)
-//
-  getCategoriasPopulares() {
-    const categoriasCount = new Map();
-    if (this.data) {
-      this.data.forEach(item => {
-        const comercioNombre = item.tipoComercio.nombre;
-        if (categoriasCount.has(comercioNombre)) {
-          categoriasCount.set(comercioNombre, categoriasCount.get(comercioNombre) + 1);
-        } else {
-          categoriasCount.set(comercioNombre, 1);
-        }
-      });
-    }
-    const categoriasSorted = Array.from(categoriasCount.entries()).sort((a, b) => b[1] - a[1]);
-    return categoriasSorted.slice(0, 6).map(entry => entry[0]);
-  }
 
-
-  getTodasCategorias() {
-    const categoriasSet = new Set();
-    if (this.data2) {
-      this.data2.forEach(item => {
-        const comercioNombre = item.nombre;
-        categoriasSet.add(comercioNombre);
-      });
-    }
-    return Array.from(categoriasSet);
-  }
-
-  
   render() {
+    const categoriasPopulares = getCategoriasPopulares(this.data);
     render(
+      
       html`
-      <style>
-  .grid-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Crea 3 columnas de igual ancho */
-    grid-gap: 10px; /* Espacio entre las celdas */
-  }
+      
+      <!-- OBTENEMOS EL CSS DE BOUNDARY/WEBCOMPONENTS-->
+      <link rel="stylesheet" href="boundary/webComponents/stilospaginaprincial.css">
 
-  .grid-item {
-    background-color: #FFFFFF;
-    padding: 10px;
-  }
-
-  .grid-item:last-child {
-    grid-column-start: 3; /* La última celda comenzará en la columna 3 */
-  }
-
-  .grid-itemFinally {
-    grid-column-start: 3; /* El cardOne comenzará en la columna 3 */
-  }
-
-  .cardOne {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: auto;
-    border-radius: 14px;
-    background-color: #0D258F; /* Color de fondo principal donde va el nombre de la categoria*/
-    cursor: pointer;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Borde sombreado alrededor */
-  }
-
-  .cardOne:hover {
-    transform: scale(1.05); /* Efecto de escala al pasar el cursor */
-  }
-
-  .cardOne::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.2); /* Color de superposición */
-    mix-blend-mode: overlay;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    opacity: 0;
-  }
-
-  .cardOne:hover::before {
-    opacity: 1; /* Opacidad de la superposición al pasar el cursor */
-  }
-
-  .cardOne img {
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-    filter: brightness(0.9); /* Nivel de brillo de la imagen */
-  }
-
-  .cardOne h1 {
-    text-align: center;
-    margin-top: 10px;
-    font-size: 18px;
-    color: #fff; /* Color del texto */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Sombra del texto */
-  }
-
-  .card-content {
-    padding: 16px;
-  }
-
- 
-  
-  .grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .grid-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f1f1f1;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .cardOne {
-    width: 100%;
-    text-align: center;
-  }
-  
-  .tarjeta {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-  
-  /* Estilo personalizado para la barra de desplazamiento */
-
-  #scrollContainer {
-    max-height: 600px; /* Altura máxima del contenedor con desplazamiento */
-    overflow-y: scroll;
-    scrollbar-width: thin;
-    scrollbar-color: #888888 #f1f1f1;
-  }
-  #scrollContainer::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  #scrollContainer::-webkit-scrollbar-thumb {
-    background-color: #888888;
-  }
-  
-  #scrollContainer::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-  }
-
-  #messageContainer {
-    position: sticky;
-    top: 0;
-    background-color: #ffffff;
-    padding: 10px;
-    text-align: center;
-    
-  }
-  
-  #messageContainer p {
-    margin: 0;
-    color: #000000;
-    font-weight: bold;
-    font-size: 40px
-  }
-
-  /* Estilo personalizado para la lista */
-  .containerSelect {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100px;
-    font-size: 24px;
-  }
-
-  .dropdown {
-    width: 300px;
-  }
-
-  .dropdown select {
-    width: 100%;
-    padding: 10px;
-    font-size: 24px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    appearance: none;
-  }
-
-  .grid-container2 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 10px;
-    justify-content: flex-end; 
-  }
-  
-</style>
-
-    
 <!-- MOSTRAR CATEGORIAS POPULARES -->
       <div class="grid-container">
+      
       ${this.data && this.data2 ? html`
-        ${this.getCategoriasPopulares().map((categoria, index) => {
+      
+        ${categoriasPopulares.map((categoria, index) => {
           const categoriaObj = this.data2.find(item => item.nombre === categoria);
           const imageUrl = categoriaObj?.comentarios || this.src;
 
@@ -279,6 +77,7 @@ class CardComponent extends HTMLElement {
     </div>
     <br>
 
+
     <!-- CARD ONE (BOTON DE TODAS LAS CATEGORIAS) -->
     <div class="grid-container2">
     ${this.data2 && this.data2? html`
@@ -292,30 +91,29 @@ class CardComponent extends HTMLElement {
     ` : html``}
   </div>
 
+
   <!-- OBTIENE TODAS LAS CATEGORIAS -->
-  <div class="grid-container">
-      ${this.tiposcomercios  && this.tiposcom && this.urlcomen? html`
-        ${this.tiposcomercios.map(({ nombre, descripcion }, index) => {
-          const categoria = this.tiposcom[index];
-          const urlTP = this.urlcomen[index];
-          
-          return html`
-            <div class="grid-item">
-              <div class="cardOne">
-                <div></div>
-                <img src="${urlTP}" alt="Imagen de la tarjeta" class="tarjeta" onclick="mostrarcomercios('${categoria}')" )"  />
-                <h1>${categoria}</h1>
-                <ul>
-                  <!-- Agrega aquí los detalles adicionales del comercio si deseas -->
-                </ul>
-              </div>
-            </div>
-          `;
-        })}
-      ` : html``}
-    </div>
+  <div class="containerSelect">
+  <div id="messageContainer">
+    <p>Todas</p>
+  </div>
+  <div class="dropdown">
+  <select onclick="mostrarcomercios(this.value)">
+    ${this.tiposcomercios && this.tiposcom && this.urlcomen ? html`
+      ${this.tiposcomercios.map(({ nombre, descripcion }, index) => {
+        const categoria = this.tiposcom[index];
+        const urlTP = this.urlcomen[index];
 
-
+        return html`
+        
+          <option value="${categoria}">${categoria}</option>
+        `;
+      })}
+    ` : html``}
+  </select>
+  </div>
+</div>
+<br><br><br>
 
     <!-- OBTIENE TODOS LOS COMERCIOS SEGUN LA CATEGORIA SELECCIONADA -->
 
@@ -400,7 +198,6 @@ class CardComponent extends HTMLElement {
   this.shadowRoot);
 }
 }
-
 
 
 window.mostrartodaslascategorias = function () {
