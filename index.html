@@ -24,13 +24,39 @@
             <p class="h1inicio"><a href="./index.html">Inicio</a></p>
           </td>
           <td class="titulo-celda">
-            <p class="h1instalar">Instalar</p>
+            <p class="h1instalar"><button id="install-button">Instalar Aplicación</button></p>
           </td>
         </tr>
       </table>
     </div>
    
   </div>
+
+  <script>
+    let deferredPrompt;
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+      const installButton = document.getElementById('install-button');
+      installButton.style.display = 'block';
+      installButton.addEventListener('click', installApp);
+    });
+
+    function installApp() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('La aplicación ha sido instalada');
+            document.getElementById('install-button').style.display = 'none';
+          }
+          deferredPrompt = null;
+        });
+      }
+    }
+  </script>
+
 
   <script>
     if ("serviceWorker" in navigator) {
