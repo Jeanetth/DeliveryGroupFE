@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mocha@9.1.3/mocha.css">
+</head>
+<body>
+    <div id="mocha"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/mocha@9.1.3/mocha.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chai@4.3.4/chai.js"></script>
+
+    <script>
+        mocha.setup('bdd');
+        const assert = chai.assert;
+
+        describe('Ejemplo de prueba', function() {
+            beforeEach(function() {
+                // Configuración inicial antes de cada prueba
+            });
+
+            it('debería hacer algo', function() {
+                // Prueba aquí
+                assert.equal(2 + 2, 4);
+            });
+
+            it('debería hacer algo más', function() {
+                // Otra prueba aquí
+                assert.strictEqual('hola'.length, 4);
+            });
+
+            afterEach(function() {
+                // Limpiar después de cada prueba
+            });
+        });
+        mocha.run();
+    </script>
+</body>
+</html>
