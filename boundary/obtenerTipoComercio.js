@@ -3,7 +3,7 @@ import { clasificarCategorias,  } from "../control/ordenarCategorias.js";
 
 async function getTipoComercios() { 
   try {
-    const response = await fetch("http://20.14.165.228:8282/deliveryApp/tipocomercio/al");
+    const response = await fetch("http://20.14.165.228:8282/deliveryApp/tipocomerci");
     if (response.ok) { 
       const data = await response.json();
       return data; // Devolver los datos obtenidos 
