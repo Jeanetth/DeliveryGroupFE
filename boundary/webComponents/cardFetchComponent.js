@@ -14,10 +14,10 @@ class CardFetchComponent extends HTMLElement {
   
     async loadData() {
       try {
-        const response1 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/comercio_tipocomercio/all");
-        const response2 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/tipocomercio/all");
-        const response3 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/comercio_productos/all");
-        const response4 = await fetch("http://20.14.165.228:8080/Delivery-1.0.0-SNAPSHOT/comercio_sucursales/all");
+        const response1 = await fetch("http://20.14.165.228:8282/deliveryApp/comercio_tipocomercio/all");
+        const response2 = await fetch("http://20.14.165.228:8282/deliveryApp/tipocomercio/all");
+        const response3 = await fetch("http://20.14.165.228:8282/deliveryApp/comercio_productos/all");
+        const response4 = await fetch("http://20.14.165.228:8282/deliveryApp/comercio_sucursales/all");
         if (response1.ok && response2.ok && response3.ok) {
           this.data1 = await response1.json();
           this.data2 = await response2.json();
