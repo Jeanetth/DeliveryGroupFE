@@ -31,7 +31,7 @@ describe('Deberia obtener todos los comercios', function() {
 
     });
 
-    it('debería obtener tipo comercios', async function() {
+    it('debería obtener todos los comercios con su tipo', async function() {
         console.log(getTipoComercios())
 
         const resultado = await getAllComercios();
@@ -48,12 +48,12 @@ describe('Deberia obtener todos los comercios', function() {
         // Limpiar después de cada prueba
     });
 });
-describe('Obtener comercioProducto', function() {
+describe('Obtener comercio producto', function() {
     beforeEach(function() {
 
     });
 
-    it('debería obtener tipo comercios', async function() {
+    it('debería obtener comercio y sus productos', async function() {
         console.log(getTipoComercios())
 
         const resultado = await getComercioProducto();
@@ -70,12 +70,12 @@ describe('Obtener comercioProducto', function() {
         // Limpiar después de cada prueba
     });
 });
-describe('Obtener comercioSucursales', function() {
+describe('Obtener comercio sucursales', function() {
     beforeEach(function() {
 
     });
 
-    it('debería obtener tipo comercios', async function() {
+    it('debería obtener las sucursales y su comercio', async function() {
         console.log(getTipoComercios())
 
         const resultado = await getComercioSucursales();
