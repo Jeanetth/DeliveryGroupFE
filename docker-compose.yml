@@ -1,8 +1,0 @@
-version: '3'
-services:
-  frontend:
-    image: nginx:latest
-    ports:
-      - 8000:80
-    volumes:
-      - .:/usr/share/nginx/html
